@@ -1,0 +1,21 @@
+{
+  "name": "react-stream-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "4.1.1"
+  },
+  "dependencies": {
+    "babel": "^5.8.23",
+    "express": "^4.13.3",
+    "react": "^0.14.0",
+    "react-dom-server-stream": "0.0.1"
+  }
+}
