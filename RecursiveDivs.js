@@ -1,11 +1,13 @@
 var React = require("react");
 
+const leaf = <div>abcdefghij</div>;
+
 export default class RecursiveDivs extends React.Component {
 	render() {
 		const {depth, breadth, textLength} = this.props;
 
 		if (depth <= 0) {
-			return <div>abcdefghij</div>;
+			return leaf;
 		}
 
 		let children = [];

@@ -1,7 +1,7 @@
 {
-  "name": "react-stream-test",
-  "version": "1.0.0",
-  "description": "",
+  "name": "react-dom-stream-example",
+  "version": "0.1.0",
+  "description": "A example website for react-dom-stream",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,6 +16,12 @@
     "babel": "^5.8.23",
     "express": "^4.13.3",
     "react": "^0.14.0",
-    "react-dom-server-stream": "0.0.1"
+    "react-dom": "^0.14.0",
+    "react-dom-stream": "^0.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.25",
+    "babel-loader": "^5.3.2",
+    "webpack": "^1.12.2"
   }
 }
