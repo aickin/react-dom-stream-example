@@ -10,16 +10,18 @@ You must have node & npm installed to start.
 git clone https://github.com/aickin/react-dom-stream-example.git
 cd react-dom-stream-example
 npm install
-NODE_ENV=production npm start
+NODE_ENV=production PORT=5000 npm start
 ```
 
-It is a very simple page that reads out a recursive tree of simple divs, using either `ReactDOM.renderToString` or `ReactDOMStream.renderToString`. You can access it at:
+Obviously, you can choose a port other than 5000 if you'd like.
+
+The site has a very simple page that reads out a recursive tree of simple divs, using either `ReactDOM.renderToString` or `ReactDOMStream.renderToString`. You can access it at:
 
 ```
 http://localhost:{PORT}/{renderMethod}?depth={d}&breadth={b}
 ```
 
-* `PORT` is whatever port it started on.
+* `PORT` is whatever port the server started on, 5000 if you followed the instructions above.
 * `renderMethod` is either "string" or "stream".
 * `d` is the tree depth. Defaults to 1.
 * `b` is the tree breadth. Defaults to 1.
