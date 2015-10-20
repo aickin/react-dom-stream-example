@@ -13,7 +13,7 @@ npm install
 NODE_ENV=production npm start
 ```
 
-It is a very simple page that reads out a recursive tree of simple divs, using either `ReactDOM.renderToString` or `ReactDOMStream.renderToStream`. You can access it at:
+It is a very simple page that reads out a recursive tree of simple divs, using either `ReactDOM.renderToString` or `ReactDOMStream.renderToString`. You can access it at:
 
 ```
 http://localhost:{PORT}/{renderMethod}?depth={d}&breadth={b}
@@ -35,6 +35,7 @@ There is also a simple curl bash script, called `test.sh` that will run against 
 I ran some simple tests on my MacBook Pro (Retina, mid-2014, 2.8GHz) and came up with these results (all times in ms):
 
 | Depth	| Breadth	| Bytes	| String TTFB	| String TTLB	| Stream TTFB	| Stream TTLB	| TTFB diff	| TTLB diff
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1	| 12	| 683	| 1.17	| 1.22	| 1	| 1.05	| -15%	| -14%
 | 2	| 12	| 8,389	| 3.13	| 3.2	| 3.45	| 3.53	| 10%	| 10%
 | 3	| 12	| 108,194	| 22.93	| 23.11	| 3.26	| 23.9	| -86%	| 3%
@@ -48,6 +49,7 @@ In the larger tests, however, it's very easy to see the effects of streaming, wh
 I also ran a less scientific, real world test on a free dyno on heroku, to see what happens when real world latencies are added:
 
 | Depth	| Breadth	| Bytes	| String TTFB	| String TTLB	| Stream TTFB	| Stream TTLB	| TTFB diff	| TTLB diff
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1	| 12	| 683	| 70.48	| 70.55	| 72.76	| 72.9	| 3%	| 3%
 | 2	| 12	| 8,389	| 80.02	| 81.17	| 83.81	| 94.2	| 5%	| 16%
 | 3	| 12	| 108,194	| 242.63	| 528.59	| 85.19	| 334.26	| -65%	| -37%
