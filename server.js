@@ -6,6 +6,7 @@ import ReactDOMStream from "react-dom-stream/server";
 
 import RecursiveDivs from "./RecursiveDivs";
 import ChildArray from "./ChildArray";
+import Issue3Page from "./Issue3Page";
 import Issue4Page from "./Issue4Page";
 import FunctionalComponent from "./FunctionalComponent";
 
@@ -13,12 +14,22 @@ var app = express();
 
 app.use('/static', express.static('static'));
 
+
+// ============= ad hoc test pages ================
+// these are just ad hoc pages for testing issues that have been reported.
 app.get("/childArray", (req, res) => {
   ReactDOMStream.renderToString(<ChildArray/>, res);
   res.end();
 });
 
-app.get("/issue4Page", (req, res) => {
+app.get("/issue3", (req, res) => {
+  res.write("<html><body>");
+  ReactDOMStream.renderToString(<Issue3Page/>, res);
+  res.write("</body></html>");
+  res.end();
+});
+
+app.get("/issue4", (req, res) => {
   ReactDOMStream.renderToString(<Issue4Page req={req}/>, res);
   res.end();
 });
