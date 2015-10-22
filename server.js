@@ -1,4 +1,5 @@
 import express from "express";
+import compression from "compression";
 
 import React from "react";
 import ReactDOM from "react-dom/server";
@@ -12,8 +13,9 @@ import FunctionalComponent from "./FunctionalComponent";
 
 var app = express();
 
-app.use('/static', express.static('static'));
+app.use(compression({chunkSize: 1024 * 5, filter:function(req) { return !!(req.query.compress); }}));
 
+app.use('/static', express.static('static'));
 
 // ============= ad hoc test pages ================
 // these are just ad hoc pages for testing issues that have been reported.
