@@ -22,7 +22,7 @@
     "express": "^4.13.3",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
-    "react-dom-stream": "file:../react-dom-stream",
+    "react-dom-stream": "0.2.0-beta.3",
     "webpack": "^1.12.2"
   },
   "devDependencies": {
