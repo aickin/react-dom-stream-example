@@ -10,6 +10,7 @@ import ChildArray from "./ChildArray";
 import Issue3Page from "./Issue3Page";
 import Issue4Page from "./Issue4Page";
 import FunctionalComponent from "./FunctionalComponent";
+import bufferedStream from "buffered-stream";
 
 var app = express();
 
@@ -58,9 +59,152 @@ app.get('/string', (req, res) => {
 app.get('/stream', async function (req, res) {
   var {depth = 1, breadth = 1} = req.query;
 
-  var hash = await ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>, res, {bufferSize: 10000});
+  // var hash = await ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>, res, {bufferSize: 10000});
+  // res.end();
+
+  var stream = ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>);
+  stream.pipe(bufferedStream(5* 1024)).pipe(res, {end:false});
+  var hash = await stream.hash;
   res.end();
 });
+
+// random test of streaming without RDS.
+app.get("/streampass", (req, res) => {
+  // const pass = require("stream").PassThrough();
+  // var pass = new require("stream").Transform({
+  //   highWaterMark: 1 * 1024,
+  //   transform: function(chunk, encoding, next) {
+  //     this.push(chunk);
+  //     next();
+  //   }
+  // });
+
+  // pass.pipe(res);
+  // new Promise((resolve, reject) => {
+  //   for (let i = 0; i < 100000; i++) {
+  //     pass.write("asdfasdfasdfasdfasdfasdfasdfasdf");
+  //   }
+  //   pass.end();
+  //   resolve();
+  // });
+  var read = new require("stream").Readable();
+  read._read =function(n) {
+    this.i = this.i || 0;
+    while(this.i < 100000) {
+      this.i++
+      if (!this.push("asdfasdfasdfasdfasdfasdfasdfasdf")) {
+        return;
+      }
+    }
+    this.push(null);
+  };
+  read.pipe(res);
+});
+
+app.get("/comp/write", (req, res) => {
+  var startTime = new Date();
+  var {size = 1 * 1024 * 1024} = req.query;
+
+  for (let i = 0; i < size; i++) {
+    res.write("a");
+  }
+  res.write("\nserver:" + (new Date() - startTime) + "\n");
+  res.end();
+});
+
+app.get("/comp/wrapwrite", (req, res) => {
+  var startTime = new Date();
+  var {size = 1 * 1024 * 1024} = req.query;
+
+  var wrapped = function(res) {
+    return {
+      write: function(data) {
+        this.buffer = this.buffer || "";
+        if (this.buffer.length + data.length >= 5000) {
+          res.write(this.buffer + data);
+          this.buffer = "";
+        } else {
+          this.buffer += data;
+        }
+      }, 
+
+      end: function() {
+        res.write(this.buffer);
+        res.write("\nserver:" + (new Date() - startTime) + "\n");
+        res.end();
+      }
+    }
+  };
+
+  res = wrapped(res);
+  for (let i = 0; i < size; i++) {
+    res.write("a");
+  }
+  res.end();
+});
+
+app.get("/comp/string", (req, res) => {
+  var startTime = new Date();
+  var {size = 1 * 1024 * 1024} = req.query;
+
+  var result = "";
+  for (let i = 0; i < size; i++) {
+    result += "a";
+  }
+
+  res.write(result);
+  res.write("\nserver:" + (new Date() - startTime) + "\n");
+  res.end();
+});
+
+class RudeStream extends require("stream").Readable {
+  constructor(size, startTime, options) {
+    super(options);
+    this.size = size;
+    this.startTime = startTime;
+  }
+
+  _read(n) {
+    for (let i = 0; i < this.size; i++) {
+      this.push("a");
+    }
+    this.push("\nserver:" + (new Date() - this.startTime) + "\n");
+    this.push(null);
+  }
+}
+
+app.get("/comp/rudestream", (req, res) => {
+  var startTime = new Date();
+
+  var {size = 1 * 1024 * 1024} = req.query;
+  new RudeStream(size, startTime).pipe(res);
+});
+
+class PoliteStream extends require("stream").Readable {
+  constructor(size, startTime, options) {
+    super(options);
+    this.size = size;
+    this.sentCount = 0
+    this.startTime = startTime;
+  }
+
+  _read(n) {
+    while (this.sentCount < this.size) {
+      this.sentCount++;
+      if (!this.push("a")) return;
+    }
+    this.push("\nserver:" + (new Date() - this.startTime) + "\n");
+    this.push(null);
+  }
+}
+
+
+app.get("/comp/politestream", (req, res) => {
+  var startTime = new Date();
+  var {size = 1 * 1024 * 1024} = req.query;
+  new PoliteStream(size, startTime).pipe(res);
+});
+
 
 // =========== client-rendered responses ==========
 // these endpoints show how to connect back to the markup with React on the client side.
