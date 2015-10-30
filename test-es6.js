@@ -6,7 +6,7 @@ const argv = yargs
 	.options({
 		"d" : {
 			alias: "max-depth",
-			default: 15,
+			default: 13,
 			describe: "the maximum depth of tree to test"
 		},
 		"b" : {
@@ -52,8 +52,8 @@ async function main() {
 
 const warmUp = async (host) => {
 	for (let i = 0; i < 20; i++) {
-		await executeCurl(host, "string", 14, 2);
-		await executeCurl(host, "stream", 14, 2);
+		await executeCurl(host, "string", 13, 2);
+		await executeCurl(host, "stream", 13, 2);
 	}
 }
 const average = (input) => {
@@ -82,19 +82,18 @@ const getSamples = async (host, path, maxDepth, breadth, iterations) => {
 
 const executeCurl = (host, path, depth, breadth) => {
 	return new Promise((resolve, reject) => {
-		exec(`curl -s -w "%{time_pretransfer} %{time_starttransfer} %{time_total}" -o /dev/null "${host}${path}?depth=${depth}&breadth=${breadth}"`, function (error, stdout, stderr) {
+		exec(`curl -s -w "%{time_pretransfer} %{time_starttransfer} %{time_total} %{size_download}" -o /dev/null "${host}${path}?depth=${depth}&breadth=${breadth}"`, function (error, stdout, stderr) {
 		  if (error !== null) {
 		  	console.log(error);
 		  	reject(error);
 		  }
 		  const output = stdout.toString();
 		  const statsLine = output; //stdout.slice(stdout.lastIndexOf("\n") + 1);
-		  const [preTransfer, startTransfer, total] = statsLine.split(" ");
-		  const sizeDownload = 5; // output.length - statsLine.length;
+		  const [preTransfer, startTransfer, total, sizeDownload] = statsLine.split(" ");
 		  resolve({
 		  	ttfb: (startTransfer - preTransfer), 
 		  	ttlb: (total - preTransfer),
-		  	size: sizeDownload
+		  	size: parseInt(sizeDownload)
 		  });
 		});
 	});

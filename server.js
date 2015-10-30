@@ -63,7 +63,7 @@ app.get('/stream', async function (req, res) {
   // res.end();
 
   var stream = ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>);
-  stream.pipe(bufferedStream(5* 1024)).pipe(res, {end:false});
+  stream.pipe(res, {end:false});
   var hash = await stream.hash;
   res.end();
 });
