@@ -59,13 +59,13 @@ app.get('/string', (req, res) => {
 app.get('/stream', async function (req, res) {
   var {depth = 1, breadth = 1} = req.query;
 
-  // var hash = await ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>, res, {bufferSize: 10000});
-  // res.end();
-
-  var stream = ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>);
-  stream.pipe(res, {end:false});
-  var hash = await stream.hash;
+  var hash = await ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>, res, {bufferSize: 10000});
   res.end();
+
+  // var stream = ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>);
+  // stream.pipe(res, {end:false});
+  // var hash = await stream.hash;
+  // res.end();
 });
 
 // random test of streaming without RDS.
