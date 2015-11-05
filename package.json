@@ -23,7 +23,7 @@
     "multistream": "^2.0.2",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
-    "react-dom-stream": "0.2.0-beta.6",
+    "react-dom-stream": "0.2.0-beta.7",
     "webpack": "^1.12.2"
   },
   "devDependencies": {

@@ -1,9 +1,9 @@
 import express from "express";
 import compression from "compression";
 
-import React from "react";
-import ReactDOM from "react-dom/server";
-import ReactDOMStream from "react-dom-stream/server";
+import React from "react/dist/react.min";
+import ReactDOM from "react/dist/react.min";
+import ReactDOMStream from "react-dom-stream/dist/react.min";
 
 import RecursiveDivs from "./RecursiveDivs";
 import ChildArray from "./ChildArray";
@@ -14,7 +14,7 @@ import bufferedStream from "buffered-stream";
 
 var app = express();
 
-app.use(compression({chunkSize: 1024 * 5, filter:function(req) { return !!(req.query.compress); }}));
+// app.use(compression({chunkSize: 1024 * 5, filter:function(req) { return !!(req.query.compress); }}));
 
 app.use('/static', express.static('static'));
 
@@ -59,13 +59,13 @@ app.get('/string', (req, res) => {
 app.get('/stream', async function (req, res) {
   var {depth = 1, breadth = 1} = req.query;
 
-  var hash = await ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>, res, {bufferSize: 10000});
-  res.end();
-
-  // var stream = ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>);
-  // stream.pipe(res, {end:false});
-  // var hash = await stream.hash;
+  // var hash = await ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>, res, {bufferSize: 10000});
   // res.end();
+
+  var stream = ReactDOMStream.renderToString(<RecursiveDivs depth={depth} breadth={breadth}/>);
+  stream.pipe(res, {end:false});
+  var hash = await stream.hash;
+  res.end();
 });
 
 // random test of streaming without RDS.
