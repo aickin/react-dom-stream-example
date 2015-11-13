@@ -82,7 +82,7 @@ const getSamples = async (host, path, maxDepth, breadth, iterations) => {
 
 const executeCurl = (host, path, depth, breadth) => {
 	return new Promise((resolve, reject) => {
-		exec(`curl -s -w "%{time_pretransfer} %{time_starttransfer} %{time_total} %{size_download}" -o /dev/null "${host}${path}?depth=${depth}&breadth=${breadth}"`, function (error, stdout, stderr) {
+		exec(`curl -s -w "%{time_pretransfer} %{time_starttransfer} %{time_total} %{size_download}" --max-time 300 -o /dev/null "${host}${path}?depth=${depth}&breadth=${breadth}"`, function (error, stdout, stderr) {
 		  if (error !== null) {
 		  	console.log(error);
 		  	reject(error);
