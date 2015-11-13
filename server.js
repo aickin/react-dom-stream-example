@@ -7,41 +7,12 @@ import ReactDOMStream from "react-dom-stream/server";
 
 import RecursiveDivs from "./RecursiveDivs";
 import DynamicRecursiveDivs from "./DynamicRecursiveDivs";
-import ChildArray from "./ChildArray";
-import Issue3Page from "./Issue3Page";
-import Issue4Page from "./Issue4Page";
-import FunctionalComponent from "./FunctionalComponent";
-import bufferedStream from "buffered-stream";
 
 var app = express();
 
 // app.use(compression({chunkSize: 1024 * 5, filter:function(req) { return !!(req.query.compress); }}));
 
 app.use('/static', express.static('static'));
-
-// ============= ad hoc test pages ================
-// these are just ad hoc pages for testing issues that have been reported.
-app.get("/childArray", (req, res) => {
-  ReactDOMStream.renderToString(<ChildArray/>, res);
-  res.end();
-});
-
-app.get("/issue3", (req, res) => {
-  res.write("<html><body>");
-  ReactDOMStream.renderToString(<Issue3Page/>, res);
-  res.write("</body></html>");
-  res.end();
-});
-
-app.get("/issue4", (req, res) => {
-  ReactDOMStream.renderToString(<Issue4Page req={req}/>, res);
-  res.end();
-});
-
-app.get("/functionalComponent", (req, res) => {
-  ReactDOMStream.renderToString(<FunctionalComponent text={"Foo"}/>, res);
-  res.end();
-});
 
 // =========== raw responses ==============
 // these responses (/string and /stream) just read out from ReactDOM and ReactDOMStream to make it easy to measure 
